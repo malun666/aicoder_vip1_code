@@ -19,6 +19,7 @@
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
   <script src="./js/ajaxsetup.js"></script>
+  <link rel="stylesheet" href="./style/admin.css">
   <title>AICODER-后台管理系统</title>
 
 </head>
@@ -30,23 +31,27 @@
 
   <!-- 导航区域 -->
   <div data-options="region:'west',title:'菜单导航',split:true" style="width:200px;">
-    <input type="button" value="添加tab" id="addTab">
-    <input type="button" value="选中tab" id="selectTab">
-    <input type="button" value="读取cookie的用户tocken" id="getCookies">
+
+    <!-- 左侧菜单：可折叠面板 -->
+    <div id="aa" class="easyui-accordion" data-options="fit: true" style="width:300px;height:200px;">
+    </div>
+
   </div>
 
   <!-- 中间区域 -->
   <div data-options="region:'center'" style="padding:5px;background:#eee;">
+
+    <!-- tab导航区域 -->
     <div id="tt" data-options="fit: true" class="easyui-tabs">
-      <div title="用户列表" style="padding:20px;display:none;">
-        <input type="button" value="折叠左侧菜单栏" id="btnCloseNav"> tab1
+      <div title="欢迎列表" style="padding:20px;display:none;">
+        <h3>欢迎您使用 aicoder.com 的全栈实习</h3>
+        <input type="button" value="折叠左侧菜单栏" id="btnCloseNav">
+
+        <input type="button" value="添加tab" id="addTab">
+        <input type="button" value="选中tab" id="selectTab">
+        <input type="button" value="读取cookie的用户tocken" id="getCookies">
       </div>
-      <div title="Tab2" data-options="closable:true" style="overflow:auto;padding:20px;display:none;">
-        tab2
-      </div>
-      <div title="Tab3" data-options="iconCls:'icon-reload',closable:true" style="padding:20px;display:none;">
-        tab3
-      </div>
+
     </div>
   </div>
 
@@ -55,8 +60,66 @@
     <p style="text-align: center;">版权所有@aicoder.com</p>
   </div>
   <script>
-
     $(function () {
+      // 页面加载完成后，做相关初始化工作
+      // 初始化左侧的菜单信息
+      initMenu();
+    });
+
+    // 初始化左侧的菜单信息
+    function initMenu() {
+
+      $('#aa').on('click', '.menu_link', function (e) {
+        // 点击左侧菜单，动态添加tab页签，或者让已经存在的面板获取焦点。
+        var title = $(this).text();
+        var url = $(this).attr('url');
+        console.log(url);
+        // 判断我们的超级链接的标题是否在tab中已经存在
+        var isExist = $('#tt').tabs('exists', title);
+        if (isExist) {
+          $('#tt').tabs('select', title);
+          return;
+        }
+
+        $('#tt').tabs('add', {
+          title: title,
+          closable: true,
+          href: $(this).attr('url'),
+          iconCls: $(this).attr('iconcls')
+        })
+      });
+
+      // 第一步：加载后台的数据：menu
+      $.ajax({
+        url: '/api/site_nav',
+        data: '',
+        type: 'GET',
+        dataType: 'json'
+      }).done(function (resData, sttatus, xhr) {
+        // ajax请求成功之后，执行
+        // 第二步： 把数据生成菜单数据放到页面上去
+        // resData.data
+        for (var i = 0; i < resData.data.length; i++) {
+
+          var childHtml = [];
+          var childLength = resData.data[i].children.length;
+          for (var j = 0; j < childLength; j++) {
+            var t = resData.data[i].children[j];
+            childHtml.push('<p><a iconcls="' + t.iconCls + '" class="menu_link" href="javascript:" url="' + t.url + '">' + t.title + '</a></p>');
+          }
+
+          // 动态添加 aa  
+          $('#aa').accordion('add', {
+            title: resData.data[i].title,
+            iconCls: resData.data[i].iconCls,
+            content: childHtml.join(''),
+            selected: false
+          });
+        }
+      });
+    }
+
+    function back() {
       $('#getCookies').on('click', function (e) {
         $.messager.alert('cookes', Cookies.get('auth_token'), 'info');
         $.ajax({
@@ -87,7 +150,7 @@
       $('#btnCloseNav').on('click', function () {
         $(document.body).layout('collapse', 'west');
       });
-    });
+    }
   </script>
 </body>
 

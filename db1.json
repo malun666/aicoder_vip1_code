@@ -1,4 +1,69 @@
 {
+  "site_nav": [
+    {
+      "title": "后台管理",
+      "id": 1,
+      "iconCls": "icon-ok",
+      "children": [
+        {
+          "title": "用户管理",
+          "id": 11,
+          "iconCls": "icon-ok",
+          "url": "/userlist.html"
+        },
+        {
+          "title": "权限管理",
+          "id": 12,
+          "iconCls": "icon-ok",
+          "url": "/useradmini.html"
+        },
+        {
+          "title": "角色管理",
+          "id": 13,
+          "iconCls": "icon-ok",
+          "url": "/userrole.html"
+        }
+      ]
+    },
+    {
+      "title": "商品管理",
+      "id": 2,
+      "iconCls": "icon-ok",
+      "children": [
+        {
+          "title": "商品列表",
+          "id": 21,
+          "iconCls": "icon-ok",
+          "url": "/userlist.html"
+        },
+        {
+          "title": "商家管理",
+          "id": 22,
+          "iconCls": "icon-ok",
+          "url": "/useradmini.html"
+        }
+      ]
+    },
+    {
+      "title": "类型管理",
+      "id": 3,
+      "iconCls": "icon-ok",
+      "children": [
+        {
+          "title": "类型列表",
+          "id": 31,
+          "iconCls": "icon-ok",
+          "url": "/userlist.html"
+        },
+        {
+          "title": "编辑管理",
+          "id": 32,
+          "iconCls": "icon-ok",
+          "url": "/useradmini.html"
+        }
+      ]
+    }
+  ],
   "course": [
     {
       "id": 1000,
