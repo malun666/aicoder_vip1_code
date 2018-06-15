@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- 引入easyui的css 和js -->
+  <link rel="stylesheet" href="./lib/jquery-easyui-1.5.5.2/themes/bootstrap/easyui.css">
+  <link rel="stylesheet" href="./lib/jquery-easyui-1.5.5.2/themes/icon.css">
+
+  <!-- jquyer -->
+  <script src="./lib/jquery-easyui-1.5.5.2/jquery.min.js"></script>
+  <!-- easyui的全部脚本 -->
+  <script src="./lib/jquery-easyui-1.5.5.2/jquery.easyui.min.js"></script>
+  <!-- 语言包 -->
+  <script src="./lib/jquery-easyui-1.5.5.2/locale/easyui-lang-zh_CN.js"></script>
+
+  <script src="./lib/sha1.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+  <title>AICODER 登录</title>
+
+  <style>
+    html,
+    body,
+    div,
+    td,
+    table,
+    form,
+    tr {
+      padding: 0;
+      margin: 0;
+    }
+
+    .login-wrap {
+      width: 300px;
+      height: 200px;
+      border: 1px solid #ccc;
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -151px;
+      margin-top: -101px;
+    }
+
+    #frmLogin {
+      padding: 50px;
+    }
+
+    .btn {
+      width: 80px;
+      height: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-wrap">
+    <form id="frmLogin">
+      <table>
+        <tr>
+          <td>用户名：</td>
+          <td>
+            <input type="text" value="admin" class="easyui-textbox" data-options="iconCls:'icon-man',prompt: '用户名',required: true,validType:['length[3,8]']"
+              name="username">
+          </td>
+        </tr>
+        <tr>
+          <td>密码：</td>
+          <td>
+            <input type="password" value="aicoder" class="easyui-passwordbox" prompt="密码" data-options="required:true,validType:['length[3,18]']"
+              name="userpwd">
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input class="easyui-linkbutton btn" type="button" value="登录" id="btnLgoin">
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
+
+  <script>  
+    $(function () {
+      $('#frmLogin').on("keydown", function (e) {
+        if (e.which === 13) {
+          $('#btnLgoin').click();
+        }
+      });
+      $('#btnLgoin').on('click', function () {
+        // 校验整个表单中的所有的校验的文本框是否都校验成功
+        if ($('#frmLogin').form('validate')) {
+
+          // 把表单中数据拿到。
+          var frmDataArr = $('#frmLogin').serializeArray();
+          frmDataArr[1].value = b64_sha1(frmDataArr[1].value);
+          console.dir(frmDataArr);
+
+          // 发送ajax请求到后台，校验用户名和密码是否正确！
+          $.ajax({
+            url: '/authorized',
+            type: 'POST',
+            dataType: 'json',
+            data: frmDataArr,
+            success: function (data) {
+              // 登录成：{code: 1, msg: '成功', auth_token: 'sdlfjXsdfslj09ddABD'}
+              // 登录失败： {code: 8, msg: '登录失败，用户名米不正常...'}
+              if (data.code === 8) {
+                $.messager.alert('提醒消息', '登录失败！', 'warning');
+              } else {
+                // 后台返回的登录的tocken 放到我们的 cookie中。主页面就可以通过cookie拿到auth_token
+                Cookies.set('auth_token', data.auth_token, { path: '/' });
+                // $.messager.alert('提醒消息', '登录成功！', 'info');
+                window.location.href = './admin.html';
+              }
+            }
+          });
+        } else {
+          $.messager.alert('提示消息', '请输入规范的用户名和密码', 'warning');
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

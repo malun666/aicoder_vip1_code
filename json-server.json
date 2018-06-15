@@ -1,0 +1,5 @@
+{
+  "port": 34000,
+  "public": "./public",
+  "routes": "./route.json"
+}

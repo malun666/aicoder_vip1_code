@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- 引入easyui的css 和js -->
+  <link rel="stylesheet" href="./lib/jquery-easyui-1.5.5.2/themes/bootstrap/easyui.css">
+  <link rel="stylesheet" href="./lib/jquery-easyui-1.5.5.2/themes/icon.css">
+
+  <!-- jquyer -->
+  <script src="./lib/jquery-easyui-1.5.5.2/jquery.min.js"></script>
+  <!-- easyui的全部脚本 -->
+  <script src="./lib/jquery-easyui-1.5.5.2/jquery.easyui.min.js"></script>
+  <!-- 语言包 -->
+  <script src="./lib/jquery-easyui-1.5.5.2/locale/easyui-lang-zh_CN.js"></script>
+
+  <title>Document</title>
+
+  <style>
+    #addDialog {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  json-server 静态目录的index页面
+  <input type="button" id="btnOpenDialog" value="弹出模态对话框">
+  <input type="button" id="btnCloseDialog" value="关闭模态对话框">
+
+  <div class="" id="addDialog">
+    <h3>我们是弹出来的对话框</h3>
+  </div>
+
+  <script>
+    $(function () {
+      $('#btnCloseDialog').on('click', function () {
+        // easyui中的所有方法都是 通过这种方式调用。
+        $('#addDialog').dialog('close');
+      });
+      // 给弹出对话框的按钮绑定点击事件
+      $('#btnOpenDialog').on('click', function () {
+        $('#addDialog').dialog({
+          width: 400,
+          height: 400,
+          title: '我是弹出来的对话框的标题！',
+          modal: false,
+          collapsible: true,
+          minimizable: true,
+          maximizable: true,
+          resizable: true,
+          toolbar: [
+            {
+              text: '按钮的文字',
+              iconCls: 'icon-add',
+              handler: function () {
+                // $.messager.alert('消息框的标题', '消息框的内容', 'info');
+                $.messager.show({
+                  title: '消息的标题',
+                  msg: '用户添加成功了！',
+                  timeout: 2000
+                });
+              }
+            }, {
+              text: '编辑',
+              iconCls: 'icon-edit',
+              handler: function () {
+                $.messager.alert('消息框的标题', '消息框的内容', 'warning');
+              }
+            }, {
+              text: '删除',
+              iconCls: 'icon-remove',
+              handler: function () {
+                // $.messager.alert('消息框的标题', '消息框的内容', 'warning');
+                $.messager.confirm('删除提醒', '您确认要删除这条消息吗？', function (r) {
+                  if (r) {
+                    console.log('确认');
+                  } else {
+                    console.log('取消');
+                  }
+                });
+              }
+            }
+          ],
+          buttons: [
+            {
+              text: '确定',
+              iconCls: 'icon-ok',
+              handler: function () {
+                $.messager.alert('消息标题', '您要关闭吗？', 'question');
+              }
+            }, {
+              text: '关闭',
+              iconCls: 'icon-cancel',
+              handler: function () {
+                // $.messager.alert('消息标题', '您要关闭吗？', 'question');
+                $('#addDialog').dialog('close');
+              }
+            }
+          ],
+          onOpen: function () {
+            console.log('open')
+          },
+          onBeforeClose: function () {
+            console.log('befor close')
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

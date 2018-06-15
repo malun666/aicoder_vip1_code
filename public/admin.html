@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- 引入easyui的css 和js -->
+  <link rel="stylesheet" href="./lib/jquery-easyui-1.5.5.2/themes/bootstrap/easyui.css">
+  <link rel="stylesheet" href="./lib/jquery-easyui-1.5.5.2/themes/icon.css">
+
+  <!-- jquyer -->
+  <script src="./lib/jquery-easyui-1.5.5.2/jquery.min.js"></script>
+  <!-- easyui的全部脚本 -->
+  <script src="./lib/jquery-easyui-1.5.5.2/jquery.easyui.min.js"></script>
+  <!-- 语言包 -->
+  <script src="./lib/jquery-easyui-1.5.5.2/locale/easyui-lang-zh_CN.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+
+  <script src="./js/ajaxsetup.js"></script>
+  <title>AICODER-后台管理系统</title>
+
+</head>
+
+<body class="easyui-layout">
+  <div data-options="region:'north',split:true, collapsible: false" style="height: 80px;">
+    <h1>AICODER 后台管理系统</h1>
+  </div>
+
+  <!-- 导航区域 -->
+  <div data-options="region:'west',title:'菜单导航',split:true" style="width:200px;">
+    <input type="button" value="添加tab" id="addTab">
+    <input type="button" value="选中tab" id="selectTab">
+    <input type="button" value="读取cookie的用户tocken" id="getCookies">
+  </div>
+
+  <!-- 中间区域 -->
+  <div data-options="region:'center'" style="padding:5px;background:#eee;">
+    <div id="tt" data-options="fit: true" class="easyui-tabs">
+      <div title="用户列表" style="padding:20px;display:none;">
+        <input type="button" value="折叠左侧菜单栏" id="btnCloseNav"> tab1
+      </div>
+      <div title="Tab2" data-options="closable:true" style="overflow:auto;padding:20px;display:none;">
+        tab2
+      </div>
+      <div title="Tab3" data-options="iconCls:'icon-reload',closable:true" style="padding:20px;display:none;">
+        tab3
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部区域 -->
+  <div data-options="region:'south',split:true" style="height:50px;">
+    <p style="text-align: center;">版权所有@aicoder.com</p>
+  </div>
+  <script>
+
+    $(function () {
+      $('#getCookies').on('click', function (e) {
+        $.messager.alert('cookes', Cookies.get('auth_token'), 'info');
+        $.ajax({
+          url: '/api/course?id=1002',
+          data: '',
+          type: 'json',
+          type: 'GET',
+          success: function (data) {
+            console.log(data);
+          }
+        });
+      });
+
+      $('#selectTab').on('click', function () {
+        $("#tt").tabs('select', 'Tab2');
+      });
+      $("#addTab").on('click', function () {
+        $('#tt').tabs('add', {
+          title: '添加' + Date.now(),
+          iconCls: 'icon-no',
+          closable: true,
+          href: './index.html',
+          // content: '<h3>' + Date.now() + '</h3>',
+          selected: true
+        });
+      });
+
+      $('#btnCloseNav').on('click', function () {
+        $(document.body).layout('collapse', 'west');
+      });
+    });
+  </script>
+</body>
+
+</html>
