@@ -154,6 +154,10 @@
     // 保存当前编辑的行的数据
     function saveRow(rowIndex) {
       var originRowData = $('#coursett').datagrid('getRows')[rowIndex];
+
+      // jQuery的extend方法  Object.assign方法相似
+      originRowData = $.extend({}, originRowData);
+
       // 拿到修改完的数据
       $('#coursett').datagrid('endEdit', rowIndex);  // 结束编辑
       var rowData = $('#coursett').datagrid('getRows')[rowIndex];
@@ -162,7 +166,7 @@
       rowData.isEditing = "";
       // 发送ajax请求
       $.ajax({
-        url: '/api/course/' + rowData.id,
+        url: '/api/course' + rowData.id,
         data: rowData,
         type: 'PUT',
         dataType: 'json'
@@ -175,7 +179,16 @@
         });
         // 结束当前行的编辑状态
         $('#coursett').datagrid('endEdit', rowIndex);  // 结束编辑
-      })
+      }).fail(function (xhr, status, errromsg) {
+        $.messager.show({
+          title: '提示消息',
+          msg: '修改失败了！',
+          timeout: 1000
+        });
+
+        // 点击取消的时候，要把数据还原到之前的状态。
+        $.extend(rowData, originRowData);
+      });
     }
   </script>
 </body>
