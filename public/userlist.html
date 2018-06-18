@@ -22,11 +22,25 @@
       display: none;
     }
   </style>
+
 </head>
 
 <body>
-  <table id="coursett"></table>
-  <div class="add-dialog">
+  <div class="easyui-layout" data-options="fit: true">
+    <div data-options="region: 'north'">
+      <input id="ss" />
+      <div id="mm" style="width:120px">
+        <div data-options="name:'course_name',iconCls:'icon-ok'">课程名</div>
+        <div data-options="name:'college',iconCls:'icon-add'">大学</div>
+      </div>
+    </div>
+    <div data-options="region: 'center'">
+      <table id="coursett"></table>
+    </div>
+  </div>
+
+
+  <div class="add-dialog" style="display: none">
     <form id="frmAdd">
       <table>
         <tr>
@@ -66,10 +80,25 @@
     $(function () {
       // 加载表格的数据
       initTable();
+
+      initSearchBox();
     });
 
+    function initSearchBox() {
+      $('#ss').searchbox({
+        width: 300,
+        searcher: function (value, name) {
+          var str = '{"' + name + '_like": "' + value + '"}';
+          var param = $.parseJSON(str);
+          initTable(param);
+        },
+        menu: '#mm',
+        prompt: '请输入搜索的内容'
+      });
+    }
+
     // 加载表格的数据
-    function initTable() {
+    function initTable(param) {
       $('#coursett').datagrid({
         // url: '/api/course',//rows:一页有多少条，page：请求当前页
         title: '课程列表',
@@ -83,7 +112,7 @@
         pageSize: 10,  // 默认一页多少条
         pageNumber: 1, // 默认显示第几页
         pageList: [10, 20, 30],
-        queryParams: null,//让表格在加载数据的时候，额外传输的数据。
+        queryParams: param,//让表格在加载数据的时候，额外传输的数据。
         onBeforeLoad: function (param) {  // 表格控件请求之前，可以设置相关参数。
           // param = {page: 1, rows: 10}
           param._page = param.page;
@@ -168,13 +197,40 @@
               resizable: true,
               modal: true,
               buttons: [{
+                iconCls: 'icon-ok',
                 text: '保存',
                 handler: function () {
                   // 往后退保存数据，成功之后提示成功消息，并关闭对话框
+                  var arrData = $('#frmAdd').serializeArray();
+                  arrData.push({
+                    name: 'id',
+                    value: Date.now()
+                  });
 
+                  $.ajax({
+                    url: '/api/course',
+                    type: 'POST',
+                    data: arrData,
+                    dataType: 'json'
+                  }).done(function (data) {
+                    // 关闭对话框
+                    $('#frmAdd')[0].reset();
+                    $('.add-dialog').dialog('close');
+                    // 刷新表格
+                    $('#coursett').datagrid('reload');
+                    // 提醒用户添加成功！
+                    $.messager.show({
+                      title: '添加提醒',
+                      msg: '添加成功！',
+                      timeout: 1000
+                    });
+                  }).fail(function () {
+                    $.messager.alert('添加消息', '添加失败，请重试！', 'warning');
+                  });
                 }
               }, {
                 text: '关闭',
+                iconCls: 'icon-no',
                 handler: function () {
                   $.messager.confirm('提醒', '您确实要取消添加课程信息吗？', function (r) {
                     if (!r) {
