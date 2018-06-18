@@ -1637,8 +1637,9 @@
       "id": 1224,
       "course_name": "工圆文前专价金度保",
       "author": "蔡芳",
-      "college": "铁度年山电办",
-      "category_Id": 5
+      "college": "铁度年山电办r4",
+      "category_Id": "5",
+      "isEditing": ""
     },
     {
       "id": 1225,
@@ -1651,8 +1652,9 @@
       "id": 1226,
       "course_name": "本场更劳史结易求",
       "author": "姜娟",
-      "college": "收完连发听千",
-      "category_Id": 4
+      "college": "收完连发听千3",
+      "category_Id": "4",
+      "isEditing": ""
     }
   ],
   "course_category": [

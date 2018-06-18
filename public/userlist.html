@@ -74,6 +74,12 @@
           // 当表格进行编辑的时候，自动执行的事件
           rowData.isEditing = true; // 把当前行的数据修改
           $('#coursett').datagrid('refreshRow', rowIndex);
+        }, onCancelEdit: function (rowIndex, rowData) {
+          rowData.isEditing = false; // 把当前行的数据修改
+          $('#coursett').datagrid('refreshRow', rowIndex);
+        }, onEndEdit: function (rowIndex, rowData, changes) {
+          rowData.isEditing = false; // 把当前行的数据修改
+          $('#coursett').datagrid('refreshRow', rowIndex);
         },
         columns: [[
           { field: 'ck', checkbox: true, align: 'left', width: 50 },
@@ -92,9 +98,9 @@
               // 如果是视图状态：返回  编辑和删除的按钮
               var html = "";
               if (row.isEditing) {
-                html += '<a href="javascript:" onclick="">保存</a>'
+                html += '<a href="javascript:" onclick="saveRow(' + index + ')">保存</a>'
                 html += '&nbsp;&nbsp;&nbsp;';
-                html += '<a href="javascript:" onclick="">取消</a>'
+                html += '<a href="javascript:" onclick="cancelEdit(' + index + ')">取消</a>'
               } else {
                 html += '<a href="javascript:" onclick="editRow(' + index + ')">修改</a>'
                 html += '&nbsp;&nbsp;&nbsp;';
@@ -138,6 +144,38 @@
       // 修改当前行的isEditing ==> true
 
       // 刷新当前行数据，
+    }
+
+    // 取消编辑
+    function cancelEdit(rowIndex) {
+      $('#coursett').datagrid('cancelEdit', rowIndex);
+    }
+
+    // 保存当前编辑的行的数据
+    function saveRow(rowIndex) {
+      var originRowData = $('#coursett').datagrid('getRows')[rowIndex];
+      // 拿到修改完的数据
+      $('#coursett').datagrid('endEdit', rowIndex);  // 结束编辑
+      var rowData = $('#coursett').datagrid('getRows')[rowIndex];
+
+      $('#coursett').datagrid('beginEdit', rowIndex);  // 结束编辑
+      rowData.isEditing = "";
+      // 发送ajax请求
+      $.ajax({
+        url: '/api/course/' + rowData.id,
+        data: rowData,
+        type: 'PUT',
+        dataType: 'json'
+      }).done(function (data) {
+        // 提示成功或失败
+        $.messager.show({
+          title: '提示消息',
+          msg: '修改成功！',
+          timeout: 1000
+        });
+        // 结束当前行的编辑状态
+        $('#coursett').datagrid('endEdit', rowIndex);  // 结束编辑
+      })
     }
   </script>
 </body>
