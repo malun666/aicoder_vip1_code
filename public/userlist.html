@@ -16,10 +16,52 @@
   <!-- 语言包 -->
   <script src="./lib/jquery-easyui-1.5.5.2/locale/easyui-lang-zh_CN.js"></script>
   <title>课程列表的crud</title>
+
+  <style>
+    .add-dialog {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
   <table id="coursett"></table>
+  <div class="add-dialog">
+    <form id="frmAdd">
+      <table>
+        <tr>
+          <td>课程名</td>
+          <td>
+            <input type="text" name="course_name" id="course_name">
+          </td>
+        </tr>
+        <tr>
+          <td>作者</td>
+          <td>
+            <input type="text" name="author" id="author">
+          </td>
+        </tr>
+        <tr>
+          <td>大学</td>
+          <td>
+            <input type="text" name="college" id="college">
+          </td>
+        </tr>
+        <tr>
+          <td>分类</td>
+          <td>
+            <select name="category_Id" id="category_Id">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </div>
   <script>
     $(function () {
       // 加载表格的数据
@@ -115,7 +157,36 @@
           text: '添加',
           iconCls: 'icon-add',
           handler: function () {
+            // 弹出一个添加的层
+            $('.add-dialog').dialog({
+              title: '添加课程信息',
+              width: 300,
+              height: 300,
+              minimizable: true,
+              collapsible: true,
+              maximizable: true,
+              resizable: true,
+              modal: true,
+              buttons: [{
+                text: '保存',
+                handler: function () {
+                  // 往后退保存数据，成功之后提示成功消息，并关闭对话框
 
+                }
+              }, {
+                text: '关闭',
+                handler: function () {
+                  $.messager.confirm('提醒', '您确实要取消添加课程信息吗？', function (r) {
+                    if (!r) {
+                      return;
+                    }
+                    // 清空添加的表单，另外关闭对话框
+                    $('#frmAdd')[0].reset();
+                    $('.add-dialog').dialog('close');
+                  });
+                }
+              }]
+            });
           }
         }, {
           id: 'clearAllSelect',
@@ -147,9 +218,6 @@
           }
         }],
         onHeaderContextMenu: function (e, field) {
-
-        },
-        onLoadSuccess: function (data) {
 
         }
       });
