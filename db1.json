@@ -1613,25 +1613,12 @@
       "category_Id": 3
     },
     {
-      "id": 1221,
-      "course_name": "九表内备山深感速",
-      "author": "史刚",
-      "college": "更性圆下之主",
-      "category_Id": 2
-    },
-    {
       "id": 1222,
       "course_name": "教话它先机目明来三计",
       "author": "罗秀兰",
-      "college": "量关越常连验",
-      "category_Id": 2
-    },
-    {
-      "id": 1223,
-      "course_name": "保百的名听达那方心",
-      "author": "夏艳",
-      "college": "色较子图好进",
-      "category_Id": 2
+      "college": "量关越常连验r",
+      "category_Id": "2",
+      "isEditing": ""
     },
     {
       "id": 1224,

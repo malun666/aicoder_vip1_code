@@ -37,7 +37,7 @@
         idField: 'id',  // 主键
         loadMsg: '正在加载用户的信息...',
         pagination: true, // 是否用分页控件
-        singleSelect: false, // 是否是单行选中
+        singleSelect: true, // 是否是单行选中
         pageSize: 10,  // 默认一页多少条
         pageNumber: 1, // 默认显示第几页
         pageList: [10, 20, 30],
@@ -104,7 +104,7 @@
               } else {
                 html += '<a href="javascript:" onclick="editRow(' + index + ')">修改</a>'
                 html += '&nbsp;&nbsp;&nbsp;';
-                html += '<a href="javascript:" onclick="">删除</a>'
+                html += '<a href="javascript:" onclick="delRow(' + index + ')">删除</a>'
               }
               return html;
             }
@@ -118,10 +118,26 @@
 
           }
         }, {
+          id: 'clearAllSelect',
+          text: '清除选择',
+          iconCls: 'icon-redo',
+          handler: function () {
+            $('#coursett').datagrid('clearSelections');
+          }
+        },
+        {
           id: 'btnDelete',
           text: '删除',
           iconCls: 'icon-cancel',
           handler: function () {
+            //delRow(index);
+            var row = $('#coursett').datagrid('getSelected');
+            if (row) {
+              var delIndex = $('#coursett').datagrid('getRowIndex', row);
+              delRow(delIndex);
+            } else {
+              $.messager.alert('提醒消息', '请选择后再删除！', 'warning')
+            }
           }
         }, {
           id: 'btnEdit',
@@ -137,6 +153,12 @@
 
         }
       });
+
+      // 初始化分页器
+      var pager = $('#coursett').datagrid('getPager');
+      pager.pagination({
+        layout: ['list', 'sep', 'first', 'prev', 'sep', 'links', 'sep', 'next', 'last', 'refresh', 'last']
+      });
     }
 
     function editRow(rowIndex) {
@@ -149,6 +171,32 @@
     // 取消编辑
     function cancelEdit(rowIndex) {
       $('#coursett').datagrid('cancelEdit', rowIndex);
+    }
+
+    // 删除数据
+    function delRow(rowIndex) {
+      var rowData = $('#coursett').datagrid('getRows')[rowIndex];
+      // 第一步：提升用户是否真删除
+      $.messager.confirm({
+        title: '确认消息',
+        msg: '您确认要删除吗？',
+        fn: function (r) {
+          if (!r) {
+            return;
+          }
+          // 用户进行删除操作
+          $.ajax({
+            url: '/api/course/' + rowData.id,
+            type: 'DELETE',
+            dataType: 'json'
+          }).done(function (data) {
+            // 把表格的数据重新加载一下
+            $('#coursett').datagrid('reload');
+          }).fail(function () {
+            $.messager.alert('删除消息', '删除失败，请重试！', 'warning');
+          });
+        }
+      });
     }
 
     // 保存当前编辑的行的数据
@@ -166,7 +214,7 @@
       rowData.isEditing = "";
       // 发送ajax请求
       $.ajax({
-        url: '/api/course' + rowData.id,
+        url: '/api/course/' + rowData.id,
         data: rowData,
         type: 'PUT',
         dataType: 'json'
