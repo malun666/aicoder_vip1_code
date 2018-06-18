@@ -31,8 +31,7 @@
       $('#coursett').datagrid({
         // url: '/api/course',//rows:一页有多少条，page：请求当前页
         title: '课程列表',
-        width: 800,
-        height: 400,
+        fit: true,
         fitColumns: true,
         method: 'GET',  // http请求的方法
         idField: 'id',  // 主键
@@ -67,15 +66,41 @@
         onLoadSuccess: function (data) {  // 后台请求成功之后，自动调用次方法
           console.log(data);
         },
+        onDblClickRow: function (rowIndex, rowData) {
+          // $.messager.alert('消息', rowData.id + '', 'info');
+          $('#coursett').datagrid('beginEdit', rowIndex);
+        },
+        onBeforeEdit: function (rowIndex, rowData) {
+          // 当表格进行编辑的时候，自动执行的事件
+          rowData.isEditing = true; // 把当前行的数据修改
+          $('#coursett').datagrid('refreshRow', rowIndex);
+        },
         columns: [[
           { field: 'ck', checkbox: true, align: 'left', width: 50 },
           { field: 'id', title: '编号', width: 80 },
-          { field: 'course_name', title: '课程名', width: 120 },
-          { field: 'author', title: '作者', width: 120 },
-          { field: 'college', title: '大学', width: 220 },
+          { field: 'course_name', title: '课程名', width: 120, editor: { type: 'text', options: { required: true } } },
+          { field: 'author', title: '作者', width: 120, editor: { type: 'text' } },
+          { field: 'college', title: '大学', width: 220, editor: { type: 'text' } },
           {
-            field: 'category_Id', title: '分页', width: 120, formatter: function (value, row, index) {
+            field: 'category_Id', title: '分类', width: 120, editor: { type: 'numberbox' }, formatter: function (value, row, index) {
               return '分类' + value;
+            }
+          },
+          {
+            field: 'action', title: '操作', width: 120, formatter: function (value, row, index) {
+              // 如图是编辑状态，那么返回： 保存和取消
+              // 如果是视图状态：返回  编辑和删除的按钮
+              var html = "";
+              if (row.isEditing) {
+                html += '<a href="javascript:" onclick="">保存</a>'
+                html += '&nbsp;&nbsp;&nbsp;';
+                html += '<a href="javascript:" onclick="">取消</a>'
+              } else {
+                html += '<a href="javascript:" onclick="editRow(' + index + ')">修改</a>'
+                html += '&nbsp;&nbsp;&nbsp;';
+                html += '<a href="javascript:" onclick="">删除</a>'
+              }
+              return html;
             }
           }
         ]],
@@ -106,6 +131,13 @@
 
         }
       });
+    }
+
+    function editRow(rowIndex) {
+      $('#coursett').datagrid('beginEdit', rowIndex);
+      // 修改当前行的isEditing ==> true
+
+      // 刷新当前行数据，
     }
   </script>
 </body>
