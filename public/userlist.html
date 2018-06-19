@@ -15,13 +15,8 @@
   <script src="./lib/jquery-easyui-1.5.5.2/jquery.easyui.min.js"></script>
   <!-- 语言包 -->
   <script src="./lib/jquery-easyui-1.5.5.2/locale/easyui-lang-zh_CN.js"></script>
+  <script src="./lib/template-web.js"></script>
   <title>课程列表的crud</title>
-
-  <style>
-    .add-dialog {
-      display: none;
-    }
-  </style>
 
 </head>
 
@@ -39,7 +34,7 @@
     </div>
   </div>
 
-
+  <!-- 添加课程的对话框 -->
   <div class="add-dialog" style="display: none">
     <form id="frmAdd">
       <table>
@@ -76,6 +71,38 @@
       </table>
     </form>
   </div>
+
+  <!-- 显示课程详细信息的对话框 -->
+  <div class="info-dailog" style="display: none;">
+
+  </div>
+
+  <script id="showInfoDialogTmpl" type="text/html">
+    <h3>课程详情</h3>
+    <table>
+        <tr>
+          <td>课程id</td>
+          <td id="cid">{{id}}</td>
+        </tr>
+        <tr>
+          <td>课程名字</td>
+          <td id="cName">{{course_name}}</td>
+        </tr>
+        <tr>
+          <td>课程大学</td>
+          <td id="cCol">{{college}}</td>
+        </tr>
+        <tr>
+          <td>课程作者</td>
+          <td id="cAut">{{author}}</td>
+        </tr>
+        <tr>
+          <td>课程分类</td>
+          <td id="cCat">{{category_Id}}</td>
+        </tr>
+      </table>
+  </script>
+
   <script>
     $(function () {
       // 加载表格的数据
@@ -139,16 +166,42 @@
         },
         onDblClickRow: function (rowIndex, rowData) {
           // $.messager.alert('消息', rowData.id + '', 'info');
-          $('#coursett').datagrid('beginEdit', rowIndex);
+          // $('#coursett').datagrid('beginEdit', rowIndex);
+          // 弹出一个 对话框显示我们的 课程详情信息
+
+          // 不推荐使用的方式
+          // $("#cid").text(rowData.id);
+          // $("#cName").text(rowData.course_name);
+
+          // 推荐使用art-template模板，或者其他的前端模板
+          var html = template('showInfoDialogTmpl', rowData);
+
+          $('.info-dailog').dialog({
+            title: '课程详情',
+            content: html,
+            width: 400,
+            height: 300,
+            modal: true,
+            iconCls: 'icon-edit',
+            buttons: [{
+              text: '关闭',
+              iconCls: 'icon-no',
+              handler: function () {
+                $('.info-dailog').dialog('close');
+              }
+            }]
+          });
         },
         onBeforeEdit: function (rowIndex, rowData) {
           // 当表格进行编辑的时候，自动执行的事件
           rowData.isEditing = true; // 把当前行的数据修改
           $('#coursett').datagrid('refreshRow', rowIndex);
-        }, onCancelEdit: function (rowIndex, rowData) {
+        },
+        onCancelEdit: function (rowIndex, rowData) {
           rowData.isEditing = false; // 把当前行的数据修改
           $('#coursett').datagrid('refreshRow', rowIndex);
-        }, onEndEdit: function (rowIndex, rowData, changes) {
+        },
+        onEndEdit: function (rowIndex, rowData, changes) {
           rowData.isEditing = false; // 把当前行的数据修改
           $('#coursett').datagrid('refreshRow', rowIndex);
         },
