@@ -1504,8 +1504,9 @@
       "id": 1205,
       "course_name": "向正话们那九速",
       "author": "谭军",
-      "college": "法术压资平细",
-      "category_Id": 6
+      "college": "法术压资平细2222",
+      "category_Id": "6",
+      "isEditing": ""
     },
     {
       "id": 1206,
@@ -1632,9 +1633,10 @@
     {
       "id": 1225,
       "course_name": "越何做强下离",
-      "author": "高桂英",
+      "author": "高桂英5",
       "college": "听八九三更月",
-      "category_Id": 2
+      "category_Id": "2",
+      "isEditing": ""
     },
     {
       "id": 1226,
@@ -1647,10 +1649,11 @@
     {
       "course_name": "3333",
       "author": "4444",
-      "college": "555",
+      "college": "33555",
       "category_Id": "1",
       "id": "1529314431261",
-      "createdAt": 1529314431279
+      "createdAt": "1529314431279",
+      "isEditing": ""
     },
     {
       "course_name": "老马全栈实习",
@@ -1660,6 +1663,23 @@
       "id": "1529314480524",
       "createdAt": "1529314480545",
       "isEditing": ""
+    },
+    {
+      "course_name": "333",
+      "author": "444",
+      "college": "66",
+      "category_Id": "1",
+      "id": "1529498977483",
+      "createdAt": "1529498977489",
+      "isEditing": ""
+    },
+    {
+      "course_name": "3333333",
+      "author": "444",
+      "college": "444",
+      "category_Id": "1",
+      "id": "1529499157622",
+      "createdAt": 1529499157637
     }
   ],
   "course_category": [

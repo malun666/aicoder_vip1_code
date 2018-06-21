@@ -56,6 +56,6 @@ router.render = (req, res) => {
 // 这个就是相当于把当前所有的路由地址挂载在 '/api/couser'
 server.use('/api', router);
 
-server.listen(3000, () => {
-  console.log('JSON Server is running, http://localhost:3000')
+server.listen(3900, () => {
+  console.log('JSON Server is running, http://localhost:3900')
 })
